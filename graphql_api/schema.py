@@ -1,13 +1,22 @@
 import graphene
 
 import posts.schema
+import users.schema
 
 
-class Query(posts.schema.Query, graphene.ObjectType):
+class Query(
+    users.schema.Query,
+    posts.schema.Query,
+    graphene.ObjectType
+):
     pass
 
 
-class Mutation(posts.schema.Mutation, graphene.ObjectType):
+class Mutation(
+    users.schema.Mutation,
+    posts.schema.Mutation,
+    graphene.ObjectType
+):
     pass
 
 
