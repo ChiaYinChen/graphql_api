@@ -1,6 +1,9 @@
-from django.contrib.auth.models import User
 import graphene
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from graphene_django.types import DjangoObjectType
+from graphql_jwt.utils import jwt_encode, jwt_payload
+
 from graphql_api.utils import APIException
 
 
@@ -93,8 +96,33 @@ class DeleteUser(graphene.Mutation):
             # return APIException('User not found.', status=404)
 
 
+class LoginUser(graphene.Mutation):
+
+    class Arguments:
+        username = graphene.String(required=True)
+        password = graphene.String(required=True)
+
+    user = graphene.Field(UserType)
+    message = graphene.String()
+    token = graphene.String()
+
+    def mutate(self, info, **kwargs):
+        user = authenticate(
+            username=kwargs.get('username'),
+            password=kwargs.get('password')
+        )
+        error_message = 'Invalid login credentials.'
+        success_message = "You logged in successfully."
+        if user:
+            payload = jwt_payload(user)
+            token = jwt_encode(payload)
+            return LoginUser(token=token, message=success_message)
+        return LoginUser(message=error_message)
+
+
 class Mutation(graphene.ObjectType):
 
     create_user = CreateUser.Field()
     update_user = UpdateUser.Field()
     delete_user = DeleteUser.Field()
+    login_user = LoginUser.Field()
