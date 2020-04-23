@@ -1,9 +1,10 @@
 """Django settings for graphql_api project."""
 import os
+from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = 'utqjbl3-+=pkjz1e0i_ri57)%7vyfqwko231*=-3o973wpdh9d'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'super-secret')
 DEBUG = True
 ALLOWED_HOSTS = []
 
@@ -100,4 +101,9 @@ GRAPHENE = {
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
+}
+
+GRAPHQL_JWT = {
+    'JWT_EXPIRATION_DELTA': timedelta(seconds=60 * 10),
+    'JWT_AUTH_HEADER_PREFIX': os.environ.get('JWT_AUTH_HEADER_PREFIX', 'DJANGO'),  # noqa: E501
 }
