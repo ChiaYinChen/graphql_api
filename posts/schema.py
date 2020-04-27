@@ -1,4 +1,5 @@
 import graphene
+from django.contrib.auth.models import User
 from graphene_django.types import DjangoObjectType
 
 from posts.models import Article
@@ -25,29 +26,34 @@ class Query(graphene.ObjectType):
 class ArticleInput(graphene.InputObjectType):
 
     title = graphene.String()
+    author = graphene.String(required=True)
     content = graphene.String()
     url = graphene.String()
 
 
 class CreateArticle(graphene.Mutation):
 
-    # 請求提交的參數
     class Arguments:
         article_data = ArticleInput()
 
-    # 返回的資料
-    success = graphene.Boolean()
+    message = graphene.String()
     article = graphene.Field(ArticleType)
 
-    # 建立 article 的邏輯
     def mutate(self, info, article_data):
+        user = User.objects.filter(username=article_data.author).first()
+        if not user:
+            return CreateArticle(message='User not found')
         article = Article(
             title=article_data.title,
+            author=user,
             content=article_data.content,
             url=article_data.url
         )
         article.save()
-        return CreateArticle(article=article, success=True)
+        return CreateArticle(
+            message='Post success',
+            article=article
+        )
 
 
 class Mutation(graphene.ObjectType):
