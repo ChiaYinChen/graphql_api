@@ -1,7 +1,9 @@
 import graphene
 from django.contrib.auth.models import User
 from graphene_django.types import DjangoObjectType
+from graphql_jwt.decorators import login_required
 
+from graphql_api.utils import APIException
 from posts.models import Article
 
 
@@ -39,7 +41,10 @@ class CreateArticle(graphene.Mutation):
     message = graphene.String()
     article = graphene.Field(ArticleType)
 
+    @login_required
     def mutate(self, info, article_data):
+        if info.context.user.username != article_data.author:
+            return APIException('Please use the right token', status=404)
         user = User.objects.filter(username=article_data.author).first()
         if not user:
             return CreateArticle(message='User not found')
