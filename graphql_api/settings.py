@@ -2,8 +2,10 @@
 import os
 from datetime import timedelta
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+from .log import logging_config
 
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY', 'super-secret')
 DEBUG = True
 ALLOWED_HOSTS = []
@@ -94,6 +96,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# Custom logging configuration
+LOGGING = logging_config
 
 # Graphene
 GRAPHENE = {
