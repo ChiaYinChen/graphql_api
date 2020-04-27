@@ -104,6 +104,7 @@ GRAPHENE = {
 }
 
 GRAPHQL_JWT = {
-    'JWT_EXPIRATION_DELTA': timedelta(seconds=60 * 10),
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_EXPIRATION_DELTA': timedelta(seconds=60 * 5),
     'JWT_AUTH_HEADER_PREFIX': os.environ.get('JWT_AUTH_HEADER_PREFIX', 'DJANGO'),  # noqa: E501
 }
