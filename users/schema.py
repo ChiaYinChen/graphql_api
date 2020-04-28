@@ -37,7 +37,7 @@ class UserInput(graphene.InputObjectType):
 
     username = graphene.String(required=True)
     password = graphene.String(required=True)
-    email = graphene.String(required=True)
+    email = graphene.String()
 
 
 class CreateUser(graphene.Mutation):
@@ -51,10 +51,12 @@ class CreateUser(graphene.Mutation):
     def mutate(self, info, **kwargs):
         data = kwargs.get('user_data', {})
         username = data.get('username')
+        email = data.get('email')
+        if not email:
+            return APIException('Email required', status=404)
         user = User.objects.filter(username=username).first()
         if user:
             return CreateUser(message='User already exist', user=user)
-            # return APIException('User already exist.', status=404)
         user = User(**data)
         user.set_password(data.get('password'))
         user.save()
