@@ -1,16 +1,18 @@
 import graphene
 from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
 from graphene_django.types import DjangoObjectType
+from graphql_jwt.decorators import superuser_required
 from graphql_jwt.utils import jwt_encode, jwt_payload
 
 from graphql_api.utils import APIException
+from users.models import User
 
 
 class UserType(DjangoObjectType):
 
     class Meta:
         model = User
+        exclude = ('password',)
 
 
 class Query(graphene.ObjectType):
@@ -18,8 +20,8 @@ class Query(graphene.ObjectType):
     users = graphene.List(UserType)
     user = graphene.Field(UserType, username=graphene.String())
 
+    @superuser_required
     def resolve_users(self, info, **kwargs):
-        breakpoint()
         return User.objects.all()
 
     def resolve_user(self, info, **kwargs):
@@ -27,7 +29,7 @@ class Query(graphene.ObjectType):
         user = User.objects.filter(username=username).first()
         if user:
             return user
-        return APIException('User not found.', status=404)
+        return APIException('User not found', status=404)
 
 
 class UserInput(graphene.InputObjectType):
