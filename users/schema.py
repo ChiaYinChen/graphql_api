@@ -106,7 +106,7 @@ class DeleteUser(graphene.Mutation):
 class LoginUser(graphene.Mutation):
 
     class Arguments:
-        username = graphene.String(required=True)
+        email = graphene.String(required=True)
         password = graphene.String(required=True)
 
     user = graphene.Field(UserType)
@@ -115,7 +115,7 @@ class LoginUser(graphene.Mutation):
 
     def mutate(self, info, **kwargs):
         user = authenticate(
-            username=kwargs.get('username'),
+            username=kwargs.get('email'),
             password=kwargs.get('password')
         )
         error_message = 'Invalid login credentials.'
