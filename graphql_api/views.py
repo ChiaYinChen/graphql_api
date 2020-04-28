@@ -1,4 +1,5 @@
 from graphene_django.views import GraphQLView as BaseGraphQLView
+from users.models import User
 
 
 class GraphQLView(BaseGraphQLView):

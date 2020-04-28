@@ -112,3 +112,5 @@ GRAPHQL_JWT = {
     'JWT_EXPIRATION_DELTA': timedelta(seconds=60 * 5),
     'JWT_AUTH_HEADER_PREFIX': os.environ.get('JWT_AUTH_HEADER_PREFIX', 'DJANGO'),  # noqa: E501
 }
+# custom auth_user model
+AUTH_USER_MODEL = 'users.User'

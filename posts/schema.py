@@ -1,10 +1,10 @@
 import graphene
-from django.contrib.auth.models import User
 from graphene_django.types import DjangoObjectType
 from graphql_jwt.decorators import login_required
 
 from graphql_api.utils import APIException
 from posts.models import Article
+from users.models import User
 
 
 class ArticleType(DjangoObjectType):
