@@ -50,11 +50,10 @@ class CreateUser(graphene.Mutation):
 
     def mutate(self, info, **kwargs):
         data = kwargs.get('user_data', {})
-        username = data.get('username')
         email = data.get('email')
         if not email:
             return APIException('Email required', status=404)
-        user = User.objects.filter(username=username).first()
+        user = User.objects.filter(email=email).first()
         if user:
             return CreateUser(message='User already exist', user=user)
         user = User(**data)
