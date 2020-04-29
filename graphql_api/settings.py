@@ -124,5 +124,10 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 DOMAIN = os.environ.get('DOMAIN')
 
-# custom auth_user model
+# Custom auth_user model
 AUTH_USER_MODEL = 'users.User'
+
+# Celery
+BROKER_URL = 'redis://localhost:6379/1'
+CELERY_TIMEZONE = 'Asia/Taipei'
+CELERY_IMPORTS = ('users.tasks',)

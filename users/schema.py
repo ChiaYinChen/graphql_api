@@ -6,7 +6,7 @@ from graphql_jwt.utils import jwt_encode, jwt_payload
 
 from graphql_api.utils import APIException
 from users.models import User
-from users.send import send_confirmation_email
+from users.tasks import send_confirmation_email
 
 
 class UserType(DjangoObjectType):
@@ -59,7 +59,7 @@ class CreateUser(graphene.Mutation):
         user = User(**data)
         user.set_password(data.get('password'))
         user.save()
-        send_confirmation_email(email=user.email, username=user.username)
+        send_confirmation_email.delay(email=user.email, username=user.username)
         return CreateUser(message='Successfully created user', user=user)
 
 
