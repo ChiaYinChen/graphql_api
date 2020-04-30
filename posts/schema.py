@@ -17,8 +17,8 @@ class Query(graphene.ObjectType):
 
     articles = graphene.List(ArticleType, title=graphene.String())
 
+    @login_required
     def resolve_articles(self, info, **kwargs):
-        # 這裡可以定義 query 方式
         title = kwargs.get('title')
         if title is not None:
             return Article.objects.filter(title__contains=title)
