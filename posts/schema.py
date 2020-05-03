@@ -1,3 +1,4 @@
+"""Graphql schema for article API."""
 import graphene
 from graphene_django.types import DjangoObjectType
 from graphql_jwt.decorators import login_required
@@ -14,6 +15,7 @@ class ArticleType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
+    """Get article list."""
 
     articles = graphene.List(ArticleType, title=graphene.String())
 
@@ -34,6 +36,7 @@ class ArticleInput(graphene.InputObjectType):
 
 
 class CreateArticle(graphene.Mutation):
+    """Create a article by username."""
 
     class Arguments:
         article_data = ArticleInput()

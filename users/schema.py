@@ -1,3 +1,4 @@
+"""Graphql schema for user API."""
 import graphene
 from django.contrib.auth import authenticate
 from graphene_django.types import DjangoObjectType
@@ -17,15 +18,18 @@ class UserType(DjangoObjectType):
 
 
 class Query(graphene.ObjectType):
+    """Get user."""
 
     users = graphene.List(UserType)
     user = graphene.Field(UserType, username=graphene.String())
 
     @superuser_required
     def resolve_users(self, info, **kwargs):
+        """Get user list."""
         return User.objects.all()
 
     def resolve_user(self, info, **kwargs):
+        """Get a user detail information."""
         username = kwargs.get('username')
         user = User.objects.filter(username=username).first()
         if user:
@@ -41,6 +45,7 @@ class UserInput(graphene.InputObjectType):
 
 
 class CreateUser(graphene.Mutation):
+    """Create a user."""
 
     class Arguments:
         user_data = UserInput()
@@ -64,6 +69,7 @@ class CreateUser(graphene.Mutation):
 
 
 class UpdateUser(graphene.Mutation):
+    """Update user."""
 
     class Arguments:
         user_data = UserInput()
@@ -84,6 +90,7 @@ class UpdateUser(graphene.Mutation):
 
 
 class DeleteUser(graphene.Mutation):
+    """Delete user."""
 
     class Arguments:
         username = graphene.String(required=True)
@@ -103,6 +110,7 @@ class DeleteUser(graphene.Mutation):
 
 
 class LoginUser(graphene.Mutation):
+    """Login."""
 
     class Arguments:
         email = graphene.String(required=True)

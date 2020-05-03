@@ -1,3 +1,4 @@
+"""Graphql schema for graphql_api project."""
 import graphene
 
 import posts.schema

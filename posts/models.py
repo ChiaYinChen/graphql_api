@@ -1,9 +1,11 @@
+"""Posts app models."""
 from django.db import models
 
 from users.models import User
 
 
 class Article(models.Model):
+    """Table for article."""
 
     title = models.CharField(max_length=250)
     author = models.ForeignKey(
