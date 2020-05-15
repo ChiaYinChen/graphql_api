@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    command: |
+      sh -c '
+      python manage.py makemigrations && python manage.py migrate
+      python manage.py runserver 0.0.0.0:8000
+      '
+    environment:
+      - SQL_ENGINE=${SQL_ENGINE}
+      - PGSQL_USER=${PGSQL_USER}
+      - PGSQL_PWD=${PGSQL_PWD}
+      - PGSQL_DB=${PGSQL_DB}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - .:/graphql_api/
+    ports:
+      - 8000:8000
+    restart: always
+    logging:
+      options:
+        max-size: "100m"
+        max-file: "3"
+      driver: "json-file"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:12.2-alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${PGSQL_USER}
+      - POSTGRES_PASSWORD=${PGSQL_PWD}
+      - POSTGRES_DB=${PGSQL_DB}
+    ports:
+      - 5432:5432
+
+  celery-redis:
+    image: redis:alpine
+
+  celery:
+    build: .
+    command: celery -A graphql_api worker -l info
+    depends_on:
+      - celery-redis
+
+volumes:
+  pgdata:
