@@ -12,6 +12,7 @@ django-graphql-jwt = "==0.3.1"
 colorlog = "==4.1.0"
 celery = "==4.4.2"
 redis = "==3.4.1"
+psycopg2-binary = "==2.8.4"
 
 [requires]
 python_version = "3.7"
