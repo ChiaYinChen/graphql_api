@@ -65,8 +65,12 @@ AUTHENTICATION_BACKENDS = [
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('PGSQL_DB', os.path.join(BASE_DIR, 'db.sqlite3')),  # noqa: E501
+        'USER': os.environ.get('PGSQL_USER'),
+        'PASSWORD': os.environ.get('PGSQL_PWD'),
+        'HOST': os.environ.get('PGSQL_HOST', 'db'),
+        'PORT': os.environ.get('PGSQL_PORT', 5432),
     }
 }
 
